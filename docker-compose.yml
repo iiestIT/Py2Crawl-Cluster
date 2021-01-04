@@ -17,7 +17,7 @@ services:
     environment:
       - REDIS_HOSTNAME=p2c-redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=
+      - REDIS_PASSWORD=__________
       - CONTROLLER_PORT=8080
     container_name: p2c-io
     hostname: p2c-io
@@ -30,7 +30,7 @@ services:
     environment:
       - REDIS_HOSTNAME=p2c-redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=
+      - REDIS_PASSWORD=__________
 
   p2c-service:
     build: ./services
@@ -38,4 +38,4 @@ services:
     environment:
       - REDIS_HOSTNAME=p2c-redis
       - REDIS_PORT=6379
-      - REDIS_PASSWORD=
+      - REDIS_PASSWORD=__________
