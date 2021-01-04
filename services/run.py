@@ -9,7 +9,10 @@ VD = VirtualDisplay()
 
 async def run():
     await asyncio.gather(
-        main(app)
+        main(app, "1"),
+        main(app, "2"),
+        main(app, "3"),
+        main(app, "4")
     )
 
 

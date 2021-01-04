@@ -5,7 +5,10 @@ import asyncio
 
 async def run():
     await asyncio.gather(
-        main()
+        main("1"),
+        main("2"),
+        main("3"),
+        main("4")
     )
 
 if __name__ == "__main__":

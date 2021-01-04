@@ -26,8 +26,10 @@ async def to_scrape(items: ToScrape):
         "id": f"{_id}",
         "scope": 1 if items.scope == True else 0
     }))
+    redis.close()
+    await redis.wait_closed()
     return {
-        "msg": f"url {items.url} added to queue",
+        "url": f"{items.url}",
         "id": f"{_id}"
     }
 
