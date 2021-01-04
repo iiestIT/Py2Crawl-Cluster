@@ -1,0 +1,3 @@
+aioredis
+Py2Web>=1.0.6
+Py2Crawl

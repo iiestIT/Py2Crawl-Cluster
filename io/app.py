@@ -6,7 +6,8 @@ from utils.check_envs import check_envs
 from config import BaseConfig as bconf
 import aioredis
 import uvicorn
-
+import json
+import uuid
 
 app = FastAPI()
 
@@ -19,9 +20,15 @@ async def startup():
 @app.post("/to-scrape")
 async def to_scrape(items: ToScrape):
     redis = await aioredis.create_redis(f"redis://{bconf.REDIS_HOSTNAME}:{bconf.REDIS_PORT}/0", encoding="utf-8")
-    await redis.publish('controller:new')
+    _id = uuid.uuid4()
+    redis.rpush('toscrape:new', json.dumps({
+        "url": f"{items.url}",
+        "id": f"{_id}",
+        "scope": 1 if items.scope == True else 0
+    }))
     return {
-        "msg": f"url {items.url} added to queue"
+        "msg": f"url {items.url} added to queue",
+        "id": f"{_id}"
     }
 
 
@@ -32,13 +39,14 @@ async def get_data(ws: WebSocket):
     [ch] = await redis.psubscribe('results:*')
     while True:
         msg = await ch.get()
+        msg = msg[1].decode("utf-8")
         try:
             await ws.send_json(msg)
         except (ConnectionClosed, WebSocketDisconnect):
-            print(f"{ws} disconnected")
             return
+
 
 if __name__ == "__main__":
     uvicorn.run(
-        app, port=bconf.CONTROLLER_PORT
+        app, port=bconf.CONTROLLER_PORT, host="0.0.0.0"
     )
